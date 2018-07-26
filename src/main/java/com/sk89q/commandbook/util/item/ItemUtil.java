@@ -20,8 +20,9 @@ package com.sk89q.commandbook.util.item;
 
 import com.sk89q.commandbook.CommandBook;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.worldedit.blocks.*;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -32,21 +33,6 @@ import java.util.Random;
  */
 public class ItemUtil {
 
-    /**
-     * Gets the name of an item.
-     *
-     * @param id
-     * @return
-     */
-    public static String toItemName(int id) {
-        ItemType type = ItemType.fromID(id);
-
-        if (type != null) {
-            return type.getName();
-        } else {
-            return "#" + id;
-        }
-    }
 
     /**
      * Returns a matched item.
@@ -84,34 +70,21 @@ public class ItemUtil {
 
 
 
-        try {
-            id = Integer.parseInt(name);
-        } catch (NumberFormatException e) {
-            // First check the configurable list of aliases
-            Integer idTemp = CommandBook.inst().getItemNames().get(name.toLowerCase());
-
-            if (idTemp != null) {
-                id = idTemp;
-            } else {
-                // Then check WorldEdit
-                ItemType type = ItemType.lookup(name);
-
-                if (type == null) {
-                    throw new CommandException("No item type known by '" + name + "'");
-                }
-
-                id = type.getID();
-            }
-        }
-
         // If the user specified an item data or damage value, let's try
         // to parse it!
+/*
         if (dataName != null) {
             dmg = matchItemData(id, dataName);
         }
-
-        ItemStack stack = new ItemStack(id, 1, (short)dmg);
-
+*/
+        Material mat = Material.getMaterial(name.toUpperCase());
+        if(mat == null){
+            throw new CommandException("No item type known by '" + name + "'");
+        }
+        ItemStack stack = new ItemStack(Material.getMaterial(name.toUpperCase()),  (short)dmg);
+        if (stack == null) {
+            throw new CommandException("No item type known by '" + name + "' See https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html for list.");
+        }
         if (enchantmentName != null) {
             String[] enchantments = enchantmentName.split(",");
             for (String enchStr : enchantments) {
@@ -152,7 +125,7 @@ public class ItemUtil {
      * @param infinite
      */
     public static void expandStack(ItemStack item, boolean infinite, boolean overrideStackSize) {
-        if (item == null || item.getAmount() == 0 || item.getTypeId() <= 0) {
+        if (item == null || item.getAmount() == 0 || item.getType() == null) {
             return;
         }
 
@@ -177,7 +150,7 @@ public class ItemUtil {
      * @return
      * @throws com.sk89q.minecraft.util.commands.CommandException
      */
-    public static int matchItemData(int id, String filter) throws CommandException {
+ /*   public static int matchItemData(int id, String filter) throws CommandException {
         try {
             // First let's try the filter as if it was a number
             return Integer.parseInt(filter);
@@ -233,7 +206,7 @@ public class ItemUtil {
             default:
                 throw new CommandException("Invalid data value of '" + filter + "'.");
         }
-    }
+    }*/
 
     /**
      * Attempt to match a dye color for sheep wool.
@@ -244,7 +217,9 @@ public class ItemUtil {
      */
     public static DyeColor matchDyeColor(String filter) throws CommandException {
         if (filter.equalsIgnoreCase("random")) {
-            return DyeColor.getByData((byte) new Random().nextInt(15));
+            //ToDo: Test This.  It may not work as expected.
+            Color c = Color.fromBGR( new Random().nextInt(15));
+            return DyeColor.getByColor(c);
         }
         try {
             DyeColor match = DyeColor.valueOf(filter.toUpperCase());

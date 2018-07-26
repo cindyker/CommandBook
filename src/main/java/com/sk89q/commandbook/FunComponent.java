@@ -108,9 +108,9 @@ public class FunComponent extends BukkitComponent {
         }
 
         if (creature instanceof Skeleton) {
-            creature.getEquipment().setItemInHand(new ItemStack(Material.BOW));
+            creature.getEquipment().setItemInMainHand(new ItemStack(Material.BOW));
         } else if (creature instanceof PigZombie) {
-            creature.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD));
+            creature.getEquipment().setItemInMainHand(new ItemStack(Material.GOLDEN_SWORD));
         }
 
         String[] types = specialTypes.split(",");

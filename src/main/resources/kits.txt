@@ -13,7 +13,7 @@
 # use that particular kit.
 #
 [starter=20]
-woodpick
-woodaxe
-woodshovel
-wood-64
+wooden_pickaxe
+wooden_axe
+wooden_shovel
+oak_plank-64

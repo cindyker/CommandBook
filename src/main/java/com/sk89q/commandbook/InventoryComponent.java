@@ -28,7 +28,6 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.worldedit.blocks.ItemType;
 import com.zachsthings.libcomponents.ComponentInformation;
 import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
@@ -40,6 +39,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
 
 import java.util.*;
 
@@ -79,10 +79,10 @@ public class InventoryComponent extends BukkitComponent {
      * @param id
      * @throws CommandException
      */
-    public void checkAllowedItem(CommandSender sender, int id, int damage)
+    public void checkAllowedItem(CommandSender sender, String id, int damage)
             throws CommandException {
 
-        if (Material.getMaterial(id) == null || id == 0) {
+        if (Material.getMaterial(id) == null || id == "") {
             throw new CommandException("Non-existent item specified.");
         }
 
@@ -414,9 +414,7 @@ public class InventoryComponent extends BukkitComponent {
 
                         // Same type?
                         // Blocks store their color in the damage value
-                        if (item2.getTypeId() == item.getTypeId() &&
-                                ((!ItemType.usesDamageValue(item.getTypeId()) && ignoreDamaged)
-                                        || item.getDurability() == item2.getDurability()) &&
+                        if (item2.getType() == item.getType() &&
                                     ((item.getItemMeta() == null && item2.getItemMeta() == null)
                                             || (item.getItemMeta() != null &&
                                                 item.getItemMeta().equals(item2.getItemMeta())))) {
@@ -474,16 +472,17 @@ public class InventoryComponent extends BukkitComponent {
             for (Player player : targets) {
                 Inventory inventory = player.getInventory();
 
+
                 if (!repairAll && !repairHotbar && !repairEquipment) {
-                    ItemStack stack = player.getItemInHand();
-                    if (stack != null && !ItemType.usesDamageValue(stack.getTypeId())) {
+                    ItemStack stack = player.getInventory().getItemInMainHand();
+                    if (stack != null ) {
                         stack.setDurability((short) 0);
                     }
                 } else {
                     if (repairAll || repairHotbar) {
                         for (int i = (repairAll ? 36 : 8); i >= 0; --i) {
                             ItemStack stack = inventory.getItem(i);
-                            if (stack != null && !ItemType.usesDamageValue(stack.getTypeId())) {
+                            if (stack != null ){
                                 stack.setDurability((short) 0);
                             }
                         }
@@ -493,7 +492,7 @@ public class InventoryComponent extends BukkitComponent {
                         // Armor slots
                         for (int i = 36; i <= 39; i++) {
                             ItemStack stack = inventory.getItem(i);
-                            if (stack != null && !ItemType.usesDamageValue(stack.getTypeId())) {
+                            if (stack != null ){
                                 stack.setDurability((short) 0);
                             }
                         }
@@ -533,7 +532,7 @@ public class InventoryComponent extends BukkitComponent {
                 @Override
                 public String format(Enchantment entry) {
                     return ChatColor.BLUE + entry.getName().toUpperCase() + ChatColor.YELLOW
-                            + " (ID: " + ChatColor.WHITE + entry.getId() + ChatColor.YELLOW
+                            + " (ID: " + ChatColor.WHITE + entry.toString() + ChatColor.YELLOW
                             + ", Max Level: " + ChatColor.WHITE + entry.getMaxLevel() + ChatColor.YELLOW + ')';
                 }
             }.display(sender, Arrays.asList(Enchantment.values()), args.getFlagInteger('p', 1));

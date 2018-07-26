@@ -82,7 +82,7 @@ public class ThorComponent extends BukkitComponent implements Listener {
         Player player = event.getPlayer();
 
         if (sessions.getSession(UserSession.class, player).hasThor()) {
-            if (!config.thorItems.contains(player.getItemInHand().getTypeId())) {
+            if (!config.thorItems.contains(player.getInventory().getItemInMainHand().getType().name())) {
                 return;
             }
 
