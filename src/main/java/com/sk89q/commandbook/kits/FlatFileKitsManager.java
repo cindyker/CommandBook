@@ -108,6 +108,8 @@ public class FlatFileKitsManager implements KitManager {
                     continue;
                 }
 
+                item.setAmount(1);
+
                 // Attempt to parse an amount
                 if (parts.length >= 2) {
                     try {

@@ -12,8 +12,10 @@
 # in seconds. Players have to wait that amount of time before they can
 # use that particular kit.
 #
+# Use Enchantment names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
+#
 [starter=20]
-wooden_pickaxe
+wooden_pickaxe|PROTECTION_ENVIRONMENTAL:1
 wooden_axe
 wooden_shovel
-oak_plank-64
+oak_planks-64

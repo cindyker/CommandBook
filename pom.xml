@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sk89q</groupId>
   <artifactId>commandbook</artifactId>
-  <version>3.5-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
   <name>CommandBook</name>
   <description>CommandBook brings general commands to Bukkit</description>
   <licenses>
